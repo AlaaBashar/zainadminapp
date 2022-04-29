@@ -1,9 +1,8 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
 import '../models/admin_model.dart';
+import '../models/areas_model.dart';
 import '../models/complaint_model.dart';
 import '../models/contract_model.dart';
 import '../models/ministries_model.dart';
@@ -174,8 +173,7 @@ class Api {
   }
 
   static Future updateSuggestion(SuggestionModel suggestionModel) async {
-    DocumentReference doc =
-    db.collection(CollectionsKey.SUGGESTIONS).doc(suggestionModel.id);
+    DocumentReference doc = db.collection(CollectionsKey.SUGGESTIONS).doc(suggestionModel.id);
 
     await doc.update({
       'suggestionsStatus': getStringFromEnum(suggestionModel.suggestionsStatus!)
@@ -242,6 +240,28 @@ class Api {
     DocumentReference doc = db.collection(CollectionsKey.OFFERS).doc();
     await doc.set(model.toJson());
   }
+  static Future setAreas(AreasModel model) async {
+    DocumentReference doc = db.collection(CollectionsKey.AREAS).doc();
+    model.id = doc.id;
+    await doc.set(model.toJson());
+  }
+  static Future<List<AreasModel>> getAreas() async {
+    List<AreasModel> areasModel = [];
+
+    QuerySnapshot querySnapshot =
+    await db.collection(CollectionsKey.AREAS).get();
+
+    areasModel = querySnapshot.docs
+        .map((e) => AreasModel.fromJson(e.data() as Map<String, dynamic>))
+        .toList();
+
+    // if(offerModel.isNotEmpty) {
+    //   offerModel.sort((a, b) => b.date!.compareTo(a.date!));
+    // }
+
+    return areasModel;
+  }
+
   static Future<List<OffersModel>> getOffers() async {
     List<OffersModel> offerList = [];
 
@@ -259,6 +279,17 @@ class Api {
     return offerList;
   }
 
+  static Future onEditAreas(AreasModel? model,String? docId) async {
+    model!.id = docId;
+    DocumentReference doc = db.collection(CollectionsKey.AREAS).doc(model.id);
+    await doc.update(model.toJson());
+
+    // DocumentReference doc = db.collection(CollectionsKey.SUGGESTIONS).doc(model!.id);
+    // await doc.update({
+    //   'isBlocked': !model.isBlocked,
+    // });
+
+  }
 
 
 }

@@ -36,6 +36,7 @@ class _ContractPageState extends State<ContractPage> {
           itemBuilder: (_, index) {
             ContractModel model = contractsList![index];
             return Padding(
+
               padding: const EdgeInsets.all(8.0),
               child: Card(
                 child: Padding(

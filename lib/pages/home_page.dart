@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:zainadminapp/pages/suggestions_page.dart';
 import '../network/auth.dart';
 import '../utils.dart';
-import 'complaints_page.dart';
+import 'areas_page.dart';
 import 'contracts_page.dart';
-import 'ministries/minisries_page.dart';
 import 'my_visits_page.dart';
 import 'offers_page.dart';
 import 'splash_page.dart';
 import 'users_page.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
           CardSection(
             title: 'المناطق',
             onTap: () {
-              //openNewPage(context, SuggestionsPage());
+              openNewPage(context, const AreasPage());
             },
             icon: const Icon(
               CupertinoIcons.location,

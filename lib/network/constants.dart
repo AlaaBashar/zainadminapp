@@ -1,6 +1,7 @@
 class CollectionsKey {
   static const String USERS = 'Users';
   static const String ADMINS = 'Admin';
+  static const String AREAS = 'Areas';
   static const String MINISTRIES = 'Ministries';
   static const String COMPLAINTS = 'Complaints';
   static const String CONTRACTS = 'Contracts';
