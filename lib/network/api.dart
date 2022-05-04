@@ -122,7 +122,7 @@ class Api {
         .map((e) => ComplaintModel.fromJson(e.data() as Map<String, dynamic>))
         .toList();
 
-    if(complaintList.isNotEmpty) {
+    if (complaintList.isNotEmpty) {
       complaintList.sort((a, b) => b.date!.compareTo(a.date!));
     }
 
@@ -157,9 +157,8 @@ class Api {
   static Future<List<SuggestionModel>> getSuggestions() async {
     List<SuggestionModel> suggestionsList = [];
 
-    QuerySnapshot querySnapshot = await db
-        .collection(CollectionsKey.SUGGESTIONS)
-        .get();
+    QuerySnapshot querySnapshot =
+        await db.collection(CollectionsKey.SUGGESTIONS).get();
 
     suggestionsList = querySnapshot.docs
         .map((e) => SuggestionModel.fromJson(e.data() as Map<String, dynamic>))
@@ -173,7 +172,8 @@ class Api {
   }
 
   static Future updateSuggestion(SuggestionModel suggestionModel) async {
-    DocumentReference doc = db.collection(CollectionsKey.SUGGESTIONS).doc(suggestionModel.id);
+    DocumentReference doc =
+        db.collection(CollectionsKey.SUGGESTIONS).doc(suggestionModel.id);
 
     await doc.update({
       'suggestionsStatus': getStringFromEnum(suggestionModel.suggestionsStatus!)
@@ -188,7 +188,6 @@ class Api {
       status = 'مرفوض';
     }
 
-    print('user : ${suggestionModel.userUid}');
     Fcm.sendNotificationToUser(
         'تحديث جديد للاقتراح ${suggestionModel.title}',
         'تم تحديث حالة الاقتراح الخاصة بك ل ( $status )',
@@ -198,9 +197,8 @@ class Api {
   static Future<List<ContractModel>> getContracts() async {
     List<ContractModel> contractsList = [];
 
-    QuerySnapshot querySnapshot = await db
-        .collection(CollectionsKey.CONTRACTS)
-        .get();
+    QuerySnapshot querySnapshot =
+        await db.collection(CollectionsKey.CONTRACTS).get();
 
     contractsList = querySnapshot.docs
         .map((e) => ContractModel.fromJson(e.data() as Map<String, dynamic>))
@@ -212,19 +210,17 @@ class Api {
     return contractsList;
   }
 
-  static Future editContract(ContractModel model,String docId) async {
+  static Future editContract(ContractModel model, String docId) async {
     model.id = docId;
-    CollectionReference  doc = db.collection(CollectionsKey.CONTRACTS);
+    CollectionReference doc = db.collection(CollectionsKey.CONTRACTS);
     await doc.doc(model.id).update(model.toJson());
-
   }
 
   static Future<List<VisitsModel>> getVisits() async {
     List<VisitsModel> visitsList = [];
 
-    QuerySnapshot querySnapshot = await db
-        .collection(CollectionsKey.VISITS)
-        .get();
+    QuerySnapshot querySnapshot =
+        await db.collection(CollectionsKey.VISITS).get();
 
     visitsList = querySnapshot.docs
         .map((e) => VisitsModel.fromJson(e.data() as Map<String, dynamic>))
@@ -238,18 +234,22 @@ class Api {
 
   static Future setOffers(OffersModel model) async {
     DocumentReference doc = db.collection(CollectionsKey.OFFERS).doc();
+    model.id = doc.id;
     await doc.set(model.toJson());
+    Fcm.sendNotificationToUser('العروض', 'تم اضافة عرض جديد', 'system');
   }
+
   static Future setAreas(AreasModel model) async {
     DocumentReference doc = db.collection(CollectionsKey.AREAS).doc();
     model.id = doc.id;
     await doc.set(model.toJson());
   }
+
   static Future<List<AreasModel>> getAreas() async {
     List<AreasModel> areasModel = [];
 
     QuerySnapshot querySnapshot =
-    await db.collection(CollectionsKey.AREAS).get();
+        await db.collection(CollectionsKey.AREAS).get();
 
     areasModel = querySnapshot.docs
         .map((e) => AreasModel.fromJson(e.data() as Map<String, dynamic>))
@@ -266,7 +266,7 @@ class Api {
     List<OffersModel> offerList = [];
 
     QuerySnapshot querySnapshot =
-    await db.collection(CollectionsKey.OFFERS).get();
+        await db.collection(CollectionsKey.OFFERS).get();
 
     offerList = querySnapshot.docs
         .map((e) => OffersModel.fromJson(e.data() as Map<String, dynamic>))
@@ -279,17 +279,23 @@ class Api {
     return offerList;
   }
 
-  static Future onEditAreas(AreasModel? model,String? docId) async {
+  static Future onEditAreas(AreasModel? model, String? docId) async {
     model!.id = docId;
+    String? status = !model.isBlocked! ? 'متاحة' : 'غير متاحة';
     DocumentReference doc = db.collection(CollectionsKey.AREAS).doc(model.id);
+    await doc.update(model.toJson());
+    Fcm.sendNotificationToUser('حالة المنطقة',
+        'تم تحديث حالة المنطقة ${model.state} الى ($status)', 'system');
+  }
+
+  static Future onEditOffer(OffersModel? model, String? docId) async {
+    model!.id = docId;
+    DocumentReference doc = db.collection(CollectionsKey.OFFERS).doc(model.id);
     await doc.update(model.toJson());
 
     // DocumentReference doc = db.collection(CollectionsKey.SUGGESTIONS).doc(model!.id);
     // await doc.update({
     //   'isBlocked': !model.isBlocked,
     // });
-
   }
-
-
 }

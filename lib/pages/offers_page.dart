@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../dialog/yes_or_no_dialog.dart';
 import '../models/offers_model.dart';
 import '../network/api.dart';
 import '../utils.dart';
@@ -26,7 +26,6 @@ class _OffersPageState extends State<OffersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
         title: const Text('الاقتراحات'),
       ),
@@ -61,14 +60,42 @@ class _OffersPageState extends State<OffersPage> {
                           Expanded(child: Divider()),
                         ],
                       ),
-                      Text('السرعة : ${model.speed}'),
+                      offerText(labels:'السرعة' ,text: model.speed),
                       const SizedBox(
                         height: 5.0,
                       ),
-                      Text('السعر : ${model.price}'),
+                      offerText(labels:'السعر' ,text:'${model.price}\$'),
                       const SizedBox(
                         height: 8.0,
                       ),
+                      offerText(labels:'الخصم' ,text: '${model.discount}\$'),
+                      const SizedBox(
+                        height: 8.0,
+                      ),
+                      InkWell(
+                        onTap: () => onBlock(model, index,),
+                        child: Container(
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(8.0),
+                                bottomRight: Radius.circular(8.0),
+                              ),
+                              color: model.isAvailable!
+                                  ? Colors.red[600]
+                                  : Colors.green[600]),
+                          child: Text(
+                            model.isAvailable! ? 'محظور' : 'فعال',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 17.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+
                     ],
                   ),
                 ),
@@ -80,13 +107,53 @@ class _OffersPageState extends State<OffersPage> {
       ),
     );
   }
+  Widget offerText({dynamic text, String? labels}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text(
+          '$labels : ',
+          textDirection: TextDirection.rtl,
+          style: const TextStyle(fontSize: 16.0,fontWeight: FontWeight.bold),
 
+        ),
+        Text(
+          '$text',
+        ),
+
+      ],
+    );
+  }
   void loadMyOffers() async {
     offersList = await Api.getOffers();
     setState(() {});
   }
+  void onBlock(OffersModel offerModel, int index,)  {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialogYesORNo(
+            title: !offerModel.isAvailable! ? 'حظر العرض' : 'الغاء الحظر',
+            content:
+            'هل انت متأكد من ${offerModel.isAvailable! ? 'الغاء ' : ''}حظر عرض ${'${offerModel.speed}'}',
+            onYes: () async {
+
+              ProgressCircleDialog.show(context);
+              offerModel.isAvailable = !offerModel.isAvailable!;
+
+              await Api.onEditOffer(offerModel,offerModel.id);
+
+              ProgressCircleDialog.dismiss(context);
 
 
+              offersList![index] = offerModel;
+
+              setState(() {});
+              Navigator.pop(context);
+            },
+          );
+        });
+  }
   void onAdd() async {
     bool? result = await showDialog(
         context: context,

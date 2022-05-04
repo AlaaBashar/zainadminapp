@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../models/complaint_model.dart';
 import '../models/visits_model.dart';
@@ -43,6 +42,7 @@ class _MyVisitPageState extends State<MyVisitPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+
                       Row(
                         children: const <Widget>[
                           Expanded(child: Divider()),
@@ -55,49 +55,49 @@ class _MyVisitPageState extends State<MyVisitPage> {
                           Expanded(child: Divider()),
                         ],
                       ),
-                      Text('الاسم الاول : ${model.firstName}',),
+                      visitText(labels:'الاسم الاول' ,text: model.firstName),
                       const SizedBox(
                         height: 5.0,
                       ),
-                      Text('الاسم الثاني : ${model.secondName}'),
+                      visitText(labels:'الاسم الثاني' ,text: model.secondName),
                       const SizedBox(
                         height: 5.0,
                       ),
-                      Text('الاسم الثالث : ${model.thirdName}'),
+                      visitText(labels:'الاسم الثالث' ,text: model.thirdName),
                       const SizedBox(
                         height: 5.0,
                       ),
-                      Text('تاريخ الميلاد : ${model.dateOfBirth}'),
+                      visitText(labels:'تاريخ الميلاد' ,text: model.dateOfBirth),
                       const SizedBox(
                         height: 5.0,
                       ),
-                      Text('الجنسية : ${model.nationality}'),
+                      visitText(labels:'الجنسية' ,text: model.nationality),
                       const SizedBox(
                         height: 5.0,
                       ),
-                      Text('الاستخدام الداخلي : ${model.internalUsage}'),
+                      visitText(labels:'نوع ID' ,text: model.idType),
                       const SizedBox(
                         height: 5.0,
                       ),
-                      Text('السعر لكل شهر : ${model.pricePerMonth}'),
+                      visitText(labels:'الاستخدام الداخلي' ,text: model.internalUsage),
                       const SizedBox(
                         height: 5.0,
                       ),
-                      Text('مدة الالتزام : ${model.commitmentDuration}'),
+                      visitText(labels:'تاريخ الزيارة' ,text:dataFormat(date: model.date!)),
                       const SizedBox(
                         height: 5.0,
                       ),
-                      Text('نهاية الزيارة : ${model.endVisit}'),
+                      visitText(labels:'السعر لكل شهر' ,text: model.pricePerMonth),
                       const SizedBox(
                         height: 5.0,
                       ),
-                      Text('نوع ID : ${model.idType}'),
+                      visitText(labels:'مدة الالتزام' ,text: model.commitmentDuration),
                       const SizedBox(
                         height: 5.0,
                       ),
-                      Text('تاريخ الزيارة : ${DateFormat('yyyy/MM/hh  hh:mm a').format(model.date!)}'),
+                      visitText(labels:'نهاية الزيارة' ,text: model.endVisit),
                       const SizedBox(
-                        height: 6.0,
+                        height: 5.0,
                       ),
                       Row(
                         children: const <Widget>[
@@ -111,39 +111,35 @@ class _MyVisitPageState extends State<MyVisitPage> {
                           Expanded(child: Divider()),
                         ],
                       ),
-                      Text('اسم الموظف : ${model.user!.name}'),
+                      visitText(labels:'اسم الموظف' ,text: model.user!.name),
                       const SizedBox(
                         height: 8.0,
                       ),
-                      Text('البريد الالكتروني : ${model.user!.email}'),
+                      visitText(labels:'البريد الالكتروني' ,text: model.user!.email),
                       const SizedBox(
                         height: 8.0,
                       ),
-                      Text('الجنس : ${model.user!.gender}'),
+                      visitText(labels:'الجنس' ,text: model.user!.gender),
                       const SizedBox(
                         height: 8.0,
                       ),
-                      Text('الرقم الوطني : ${model.user!.id}'),
+                      visitText(labels:'الرقم الوطني' ,text: model.user!.id),
                       const SizedBox(
                         height: 8.0,
                       ),
-                      Text('الحظر : ${model.user!.isBlocked}'),
+                      visitText(labels:'الحظر' ,text: model.user!.isBlocked),
                       const SizedBox(
                         height: 8.0,
                       ),
-                      Text('الاسم : ${model.user!.name}'),
+                      visitText(labels:'الاسم' ,text: model.user!.name),
                       const SizedBox(
                         height: 8.0,
                       ),
-                      Text('الهاتف : ${model.user!.phone}'),
+                      visitText(labels:'الهاتف' ,text: model.user!.phone),
                       const SizedBox(
                         height: 8.0,
                       ),
-                      Text('رقم الحساب الخاص : ${model.user!.uid}'),
-                      const SizedBox(
-                        height: 8.0,
-                      ),
-                      Text('تاريخ تسجيل الحساب : ${DateFormat('yyyy/MM/hh  hh:mm a').format(model.user!.date!)}'),
+                      visitText(labels:'تاريخ تسجيل الحساب' ,text:dataFormat(date: model.user!.date!)),
                       const SizedBox(
                         height: 8.0,
                       ),
@@ -156,7 +152,23 @@ class _MyVisitPageState extends State<MyVisitPage> {
           : getCenterCircularProgress(),
     );
   }
+  Widget visitText({dynamic text, String? labels}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text(
+          '$labels : ',
+          textDirection: TextDirection.rtl,
+          style: const TextStyle(fontSize: 16.0,fontWeight: FontWeight.bold),
 
+        ),
+        Text(
+          '$text',
+        ),
+
+      ],
+    );
+  }
   void loadMyVisits() async {
     visitsList = await Api.getVisits();
     setState(() {});

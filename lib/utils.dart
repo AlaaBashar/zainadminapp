@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ProgressCircleDialog {
   static bool _isShow = false;
@@ -40,11 +41,11 @@ void showSnackBar(BuildContext context, String value,
       bool isSuccess = false,
       Duration? duration,
       SnackBarAction? snackBarAction}) {
-  ScaffoldMessenger.of(context).showSnackBar(new SnackBar(
-    content: new Text(
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    content: Text(
       value,
     ),
-    duration: duration ?? Duration(seconds: 2),
+    duration: duration ?? const Duration(seconds: 2),
     action: snackBarAction,
     backgroundColor: isError
         ? Colors.red[800]
@@ -84,7 +85,7 @@ Future<dynamic> openNewPage(BuildContext context, Widget widget,
     {bool popPreviousPages = false}) {
 
   return  Future<dynamic>.delayed(Duration.zero,(){
-    if (!popPreviousPages)
+    if (!popPreviousPages) {
       return Navigator.push(
         context,
         MaterialPageRoute(
@@ -92,7 +93,7 @@ Future<dynamic> openNewPage(BuildContext context, Widget widget,
           settings: RouteSettings(arguments: widget),
         ),
       );
-    else
+    } else {
       return Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
               builder: (context) => widget,
@@ -100,6 +101,7 @@ Future<dynamic> openNewPage(BuildContext context, Widget widget,
                 arguments: widget,
               )),
               (Route<dynamic> route) => false);
+    }
   });
 
 }
@@ -110,3 +112,7 @@ bool isValidEmail(String email) {
       .hasMatch(email);
 }
 
+String dataFormat({DateTime? date}){
+
+  return DateFormat('yyyy/MM/hh  hh:mm a').format(date!);
+}

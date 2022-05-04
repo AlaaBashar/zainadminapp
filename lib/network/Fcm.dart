@@ -6,9 +6,9 @@ import 'package:http/http.dart' as http;
 
 class Fcm {
 
-  static  String _serverKey = "AAAAT9utabo:APA91bFgpHP6KsSqq5vEBrlVawoYomsWTfoo1fBCwvpjhNPQN0td1W5g96StMTbq7Q4aqWI8NETh8FAXjAMd4l4DKFuei-7epcHtjgohuue63eTxYi3FA8B1IXQpCXyNHzQCOFAFOiyL";
+  static  const String _serverKey = "AAAABJVXcy0:APA91bGRZnmviUwfOdQdKRJMF8X8mldUoELYB1DZ2UXVVE2Iio7dHLmprHncRIDSv2KkButbevjDFFfjH2bF_l4Yv3U5_XwkN3TVNIvJ88lPur_wym5Gph86GM2oQDOmv8-lDWOe31Ni";
 
-  static  FirebaseMessaging _fcm = FirebaseMessaging.instance;
+  static  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
 
 
 
@@ -35,15 +35,15 @@ class Fcm {
     notificationObj['title'] = title;
     notificationObj['body'] = body;
 
-    var response = await http.post(Uri.parse(url), body: jsonEncode({
-      "to": "/topics/$topic",
-      "notification": notificationObj,
-    }), headers: {
-      "content-type": "application/json",
-      "authorization": "key=$_serverKey"
-    });
-
-
+    var response = await http.post(Uri.parse(url),
+        body: jsonEncode({
+          "to": "/topics/$topic",
+          "notification": notificationObj,
+        }),
+        headers: {
+          "content-type": "application/json",
+          "authorization": "key=$_serverKey"
+        });
 
     debugPrint(" fcm response : ${response.statusCode}");
 

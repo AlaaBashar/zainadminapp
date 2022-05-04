@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 
 import '../dialog/yes_or_no_dialog.dart';
 import '../models/suggestions_model.dart';
@@ -122,15 +121,18 @@ class _SuggestionsPageState extends State<SuggestionsPage> {
                       Expanded(child: Divider()),
                     ],
                   ),
-                  Text('عنوان الاقتراح : ${model.title}'),
+                  suggestText(labels:'عنوان الاقتراح' ,text: model.title),
+
                   const SizedBox(
                     height: 5.0,
                   ),
-                  Text('تفاصيل الاقتراح : ${model.des}'),
+                  suggestText(labels:'تفاصيل الاقتراح' ,text: model.des),
+
                   const SizedBox(
                     height: 8.0,
                   ),
-                  Text('التاريخ : ${DateFormat('yyyy/MM/hh  hh:mm a').format(model.date!)}'),
+                  suggestText(labels:'التاريخ' ,text:dataFormat(date: model.date!)),
+
                   const SizedBox(
                     height: 5.0,
                   ),
@@ -150,16 +152,15 @@ class _SuggestionsPageState extends State<SuggestionsPage> {
                   const SizedBox(
                     height: 5.0,
                   ),
-                  Text('الرقم الوطني : ${model.user!.id}'),
+                  suggestText(labels:'الرقم الوطني' ,text: model.user!.id),
                   const SizedBox(
                     height: 5.0,
                   ),
-                  Text('الاسم : ${model.user!.name}'),
+                  suggestText(labels:'الاسم' ,text: model.user!.name),
                   const SizedBox(
                     height: 5.0,
                   ),
-                  Text('رقم الموبايل : ${model.user!.phone}'),
-
+                  suggestText(labels:'رقم الموبايل' ,text: model.user!.phone),
                   const SizedBox(
                     height: 8.0,
                   ),
@@ -194,7 +195,7 @@ class _SuggestionsPageState extends State<SuggestionsPage> {
                                   'هل انت متأكد من تغير حالة الاقتراح لقيد الانتظار ؟');
                             },
                           ),
-                          const Text('قيد الانتظار')
+                          const Text('قيد الانتظار',style: TextStyle(fontWeight: FontWeight.bold),)
                         ],
                       ),
                       Row(
@@ -209,7 +210,7 @@ class _SuggestionsPageState extends State<SuggestionsPage> {
 
                             },
                           ),
-                          const Text('مقبول'),
+                          const Text('مقبول',style: TextStyle(fontWeight: FontWeight.bold),),
                         ],
                       ),
                       Row(
@@ -224,7 +225,7 @@ class _SuggestionsPageState extends State<SuggestionsPage> {
                             },
 
                           ),
-                          const Text('مرفوض'),
+                          const Text('مرفوض',style: TextStyle(fontWeight: FontWeight.bold),),
                         ],
                       ),
                     ],
@@ -240,8 +241,24 @@ class _SuggestionsPageState extends State<SuggestionsPage> {
     );
   }
 
-  Future onChangedStatus(
-      SuggestionModel model, SuggestionStatus? status, String content) async {
+  Widget suggestText({dynamic text, String? labels}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text(
+          '$labels : ',
+          textDirection: TextDirection.rtl,
+          style: const TextStyle(fontSize: 16.0,fontWeight: FontWeight.bold),
+
+        ),
+        Text(
+          '$text',
+        ),
+
+      ],
+    );
+  }
+  Future onChangedStatus(SuggestionModel model, SuggestionStatus? status, String content) async {
     await showDialog(
       context: context,
       builder: (_) {

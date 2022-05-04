@@ -16,6 +16,7 @@ class AddOfferDialog extends StatefulWidget {
 class _AddOfferDialogState extends State<AddOfferDialog> {
   TextEditingController speedController = TextEditingController();
   TextEditingController priceController = TextEditingController();
+  TextEditingController discountController = TextEditingController();
 
   GlobalKey<FormState> formKey = GlobalKey();
 
@@ -48,8 +49,19 @@ class _AddOfferDialogState extends State<AddOfferDialog> {
                 TextFieldApp(
                   controller: priceController,
                   hintText: 'السعر',
-                  icon: const Icon(Icons.title),
-                  type: TextInputType.multiline,
+                  icon: const Icon(Icons.monetization_on),
+                  type: TextInputType.number,
+
+                  margin: const EdgeInsets.symmetric(horizontal: 0 , vertical: 16.0),
+
+                  validator: (str)=> str!.isEmpty ? 'هذا الحقل مطلوب' : null,
+                ),
+
+                TextFieldApp(
+                  controller: discountController,
+                  hintText: 'الخصم',
+                  icon: const Icon(Icons.local_offer),
+                  type: TextInputType.number,
 
                   margin: const EdgeInsets.symmetric(horizontal: 0 , vertical: 16.0),
 
@@ -79,8 +91,9 @@ class _AddOfferDialogState extends State<AddOfferDialog> {
       return;
     }
 
-    String speed = speedController.text ;
-    String price = priceController.text ;
+    String? speed = speedController.text ;
+    String? price = priceController.text ;
+    String? discount = discountController.text ;
 
 
     ProgressCircleDialog.show(context);
@@ -89,7 +102,8 @@ class _AddOfferDialogState extends State<AddOfferDialog> {
 
     offersModel
       ..speed = speed
-      ..price = price;
+      ..price = price
+      ..discount=discount;
 
 
     await Api.setOffers(offersModel);

@@ -38,7 +38,7 @@ class _AreasPageState extends State<AreasPage> {
         child: areasList != null
             ? ListView.builder(
           itemCount: areasList!.length,
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(bottom: 80.0),
           itemBuilder: (_, index) {
             AreasModel model = areasList![index];
             return Padding(
@@ -61,11 +61,21 @@ class _AreasPageState extends State<AreasPage> {
                           Expanded(child: Divider()),
                         ],
                       ),
-                      Text('المكان : ${model.state}'),
+                      Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'المكان : ',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  '${model.state}',
+                                ),
+                              ],
+                            ),
                       const SizedBox(
-                        height: 5.0,
-                      ),
-
+                              height: 5.0,
+                            ),
                       InkWell(
                         onTap: () => onBlock(model, index,),
                         child: Container(
